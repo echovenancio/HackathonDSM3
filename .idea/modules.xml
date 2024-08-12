@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/HackathonDSM3.iml" filepath="$PROJECT_DIR$/.idea/HackathonDSM3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PassagensAereas/PassagensAereas.iml" filepath="$PROJECT_DIR$/PassagensAereas/PassagensAereas.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Restaurante/Restaurante.iml" filepath="$PROJECT_DIR$/Restaurante/Restaurante.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TreinamentoTecnologia/TreinamentoTecnologia.iml" filepath="$PROJECT_DIR$/TreinamentoTecnologia/TreinamentoTecnologia.iml" />
+    </modules>
+  </component>
+</project>
