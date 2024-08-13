@@ -21,7 +21,6 @@ class Migration:
             sys.exit(1)
         with open('.gitignore', 'r+') as f:
             lines = [line.strip() for line in f]
-            print(list(lines))
             f.seek(0, 2)
             if not migrations_hist in lines:
                 f.write(migrations_hist + '\n')
@@ -130,7 +129,7 @@ class Migration:
             remove_list.append(entry)
         while len(remove_list) > 0:
             to_remove = remove_list.pop(-1)
-            print(to_remove)
+
             try:
                 pop_file = './' + migrations_dir + os.sep + to_remove + os.sep + 'pop.sql'
                 with open(pop_file, 'r') as f:
