@@ -11,15 +11,22 @@ class Migration:
     def setup(self, args):
         with open(migrations_hist, 'w') as f:
             f.write('')
-        os.mkdir(migrations_dir)
+        if not os.path.exists(migrations_dir):
+            os.mkdir(migrations_dir)
         try:
             conn = sqlite3.connect('database.db')
             conn.close()
         except Exception as e:
             sys.stderr.write(f'[ERR] criando Banco de Dados: {e}.\n')
             sys.exit(1)
-        with open('.gitignore', 'a') as f:
-            f.write(f'{migrations_hist}\ndatabase.db')
+        with open('.gitignore', 'r+') as f:
+            lines = [line.strip() for line in f]
+            print(list(lines))
+            f.seek(0, 2)
+            if not migrations_hist in lines:
+                f.write(migrations_hist + '\n')
+            if not 'database.db' in lines:
+                f.write('database.db' + '\n')
         sys.stdout.write('Banco configurado com sucesso.\n')
 
     def run(self, args):
