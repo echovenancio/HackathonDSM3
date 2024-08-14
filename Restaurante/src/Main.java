@@ -1,7 +1,15 @@
+import model.Pedido;
+import model.Restaurante;
+
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Main extends JFrame {
     private JPanel MainPanel;
+    private JButton novoPedidoButton;
+    private JTable table1;
+    private Restaurante restuarante = new Restaurante();
 
     public Main() {
         setContentPane(MainPanel);
