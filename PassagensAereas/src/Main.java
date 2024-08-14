@@ -1,3 +1,4 @@
+import model.Aeroporto;
 import model.Voo;
 
 import javax.swing.*;
@@ -22,12 +23,10 @@ public class Main extends JFrame {
     public static void main(String[] args) {
         Voo novovoo1 = new Voo ("Voo01", "Hell de Janeiro", "Tokyo", 500);
         Voo novovoo2 = new Voo ("Voo02", "Praia Grande", "Seul", 150);
-        novovoo1.realizarReserva(5);
-        novovoo1.realizarPagamento("ida e volta", true);
-        novovoo1.imprimirpassagem();
-        novovoo2.realizarReserva(10);
-        novovoo2.realizarPagamento("ida", false);
-        novovoo2.imprimirpassagem();
+        Aeroporto ae = new Aeroporto();
+        ae.adicionarVoo(novovoo1);
+        ae.adicionarVoo(novovoo2);
+
 
     }
 
