@@ -1,7 +1,6 @@
 package model;
 
 import bd.Conexao;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -101,12 +100,4 @@ public class Restaurante {
     public void exibirPedidos() {
         System.out.println(this.toString());
     }
-
-    @Override
-    public String toString() {
-        return "Restaurante{" +
-                "pedidos=" + pedidos.toString() +
-                '}';
-    }
 }
-
