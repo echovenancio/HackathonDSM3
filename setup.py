@@ -135,7 +135,7 @@ class Migration:
                 with open(pop_file, 'r') as f:
                     cur = conn.cursor()
                     s = f.read()
-                    cur.execute(s)
+                    cur.executescript(s)
                     conn.commit()
                     sys.stdout.write(f'Revertendo migração: {to_remove}.\n')
             except Exception as e:
