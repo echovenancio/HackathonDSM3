@@ -9,6 +9,7 @@ public class ItemPedido {
         this.nome = nome;
         this.quantidade = quantidade;
         this.preco = preco;
+
     }
 
     public String getNome() {

@@ -168,17 +168,17 @@ class Migration:
             with open('.' + push_file, 'r') as push:
                 try:
                     pus = push.read()
-                    cur.execute(pus)
+                    cur.executescript(pus)
                     with open('.' + pop_file) as pop:
                         try:
                             pos = pop.read()
-                            cur.execute(pos)
+                            cur.executescript(pos)
                         except Exception as e:
                             conn.rollback()
                             conn.close()
                             sys.stderr.write(f'[ERR] Executando migração {pop_file}: {e}.\n')
                             sys.exit(1)
-                    cur.execute(pus)
+                    cur.executescript(pus)
                     conn.commit()
                     sys.stdout.write(f'Executando migração: {push_file}.\n')
                 except Exception as e:
