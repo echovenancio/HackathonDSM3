@@ -14,6 +14,18 @@ public class Pedido {
         this.items.addAll(Arrays.asList(items));
     }
 
+    public ArrayList<ItemPedido> getItems() {
+        return this.items;
+    }
+
+    public void setMesa(int mesa) {
+        this.mesa = mesa;
+    }
+
+    public int getMesa() {
+        return this.mesa;
+    }
+
     public double totalPedido() {
         return this.items.stream()
                 .reduce(0.0, (sum, item) -> Double.sum(sum,item.getPreco() * item.getQuantidade()), Double::sum);
