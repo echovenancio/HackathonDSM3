@@ -105,10 +105,17 @@ class Migration:
             print(dir_full_name)
             os.mkdir(dir_full_name)
             with open(f'{dir_full_name}{os.sep}push.sql', 'w') as f:
-                f.write('-- Arquivo push, insira as alterações que você deseja realizar no banco.')
+                f.write('-- Arquivo push, insira as alterações que você deseja realizar no banco.\n')
+                f.write('BEGIN TRANSACTION;\n')
+                f.write('-- Codigo começa aqui\n\n')
+                f.write('-- Codigo termina aqui\n')
+                f.write('COMMIT;')
             with open(f'{dir_full_name}{os.sep}pop.sql', 'w') as f:
-                f.write('-- Arquivo pop, insira as operações para reverter' 
-                        'as alterações aplicadas no push.sql.')
+                f.write('-- Arquivo pop, insira as operações para reverter as alterações aplicadas no push.sql.\n')
+                f.write('BEGIN TRANSACTION;\n')
+                f.write('-- Codigo começa aqui\n\n')
+                f.write('-- Codigo termina aqui\n')
+                f.write('COMMIT;')        
         except Exception as e:
             sys.stderr.write(f'[ERR] Criando nova migração: {e}.\n')
             sys.exit(1)
@@ -127,9 +134,8 @@ class Migration:
                 r_i += 1
                 pass
             remove_list.append(entry)
-        while len(remove_list) > 0:
+        while len(remove_list) > r_i:
             to_remove = remove_list.pop(-1)
-
             try:
                 pop_file = './' + migrations_dir + os.sep + to_remove + os.sep + 'pop.sql'
                 with open(pop_file, 'r') as f:
@@ -165,27 +171,23 @@ class Migration:
             push_file = os.sep + path + os.sep + 'push.sql'
             pop_file = os.sep + path + os.sep + 'pop.sql'
             cur = conn.cursor()
-            with open('.' + push_file, 'r') as push:
-                try:
+            try:
+                with open('.' + push_file, 'r') as push, open('.' + pop_file, 'r') as pop:
+                    nm_migration = push_file
                     pus = push.read()
                     cur.executescript(pus)
-                    with open('.' + pop_file) as pop:
-                        try:
-                            pos = pop.read()
-                            cur.executescript(pos)
-                        except Exception as e:
-                            conn.rollback()
-                            conn.close()
-                            sys.stderr.write(f'[ERR] Executando migração {pop_file}: {e}.\n')
-                            sys.exit(1)
+                    nm_migration = pop_file
+                    pos = pop.read()
+                    cur.executescript(pos)
+                    nm_migration = push_file
                     cur.executescript(pus)
                     conn.commit()
-                    sys.stdout.write(f'Executando migração: {push_file}.\n')
-                except Exception as e:
-                    conn.rollback()
-                    conn.close()
-                    sys.stderr.write(f'[ERR] Executando migração {push_file}: {e}.\n')
-                    sys.exit(1)
+                    sys.stdout.write(f'Executando migração: {directory}.\n')
+            except Exception as e:
+                conn.rollback()
+                conn.close()
+                sys.stderr.write(f'[ERR] Executando migração {push_file}: {e}.\n')
+                sys.exit(1)
             self._save_to_hist(directory)
         conn.close()
         if cnt == 0:
