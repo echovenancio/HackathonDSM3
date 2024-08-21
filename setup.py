@@ -92,8 +92,9 @@ class Migration:
         conn = None
         try:
             conn = sqlite3.connect('database.db')
+            conn.isolation_level = None
         except Exception as e:
-            sys.stderr.write(f'[ERR] nenhum banco de dados existe no diretório atual.\n')
+            sys.stderr.write(f'[ERR] erro conectando ao banco: {e}\n',)
             sys.exit(1)
         return conn
 
@@ -106,16 +107,8 @@ class Migration:
             os.mkdir(dir_full_name)
             with open(f'{dir_full_name}{os.sep}push.sql', 'w') as f:
                 f.write('-- Arquivo push, insira as alterações que você deseja realizar no banco.\n')
-                f.write('BEGIN TRANSACTION;\n')
-                f.write('-- Codigo começa aqui\n\n')
-                f.write('-- Codigo termina aqui\n')
-                f.write('COMMIT;')
             with open(f'{dir_full_name}{os.sep}pop.sql', 'w') as f:
                 f.write('-- Arquivo pop, insira as operações para reverter as alterações aplicadas no push.sql.\n')
-                f.write('BEGIN TRANSACTION;\n')
-                f.write('-- Codigo começa aqui\n\n')
-                f.write('-- Codigo termina aqui\n')
-                f.write('COMMIT;')        
         except Exception as e:
             sys.stderr.write(f'[ERR] Criando nova migração: {e}.\n')
             sys.exit(1)
@@ -173,20 +166,15 @@ class Migration:
             cur = conn.cursor()
             try:
                 with open('.' + push_file, 'r') as push, open('.' + pop_file, 'r') as pop:
-                    nm_migration = push_file
-                    pus = push.read()
-                    cur.executescript(pus)
-                    nm_migration = pop_file
-                    pos = pop.read()
-                    cur.executescript(pos)
-                    nm_migration = push_file
-                    cur.executescript(pus)
-                    conn.commit()
                     sys.stdout.write(f'Executando migração: {directory}.\n')
+                    pus = push.read()
+                    pos = pop.read()
+                    script = 'BEGIN;\n' + pus + '\n' + pos + '\n' + pus + '\nCOMMIT;'
+                    cur.executescript(script)
             except Exception as e:
                 conn.rollback()
                 conn.close()
-                sys.stderr.write(f'[ERR] Executando migração {push_file}: {e}.\n')
+                sys.stderr.write(f'[ERR] Executando migração {e}.\n')
                 sys.exit(1)
             self._save_to_hist(directory)
         conn.close()
